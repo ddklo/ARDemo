@@ -1,5 +1,6 @@
-﻿using System;
-using MonoTouch.CoreLocation;
+using System;
+using CoreLocation;
+using Foundation;
 
 namespace ARDemo
 {
@@ -15,7 +16,14 @@ namespace ARDemo
 
 		CLLocationManager lman;
 
-		public void Start ()
+        public static DateTime NSDateToDateTime(NSDate date)
+        {
+            DateTime reference = TimeZone.CurrentTimeZone.ToLocalTime(
+                new DateTime(2001, 1, 1, 0, 0, 0));
+            return reference.AddSeconds(date.SecondsSinceReferenceDate);
+        }
+
+        public void Start ()
 		{
 			if (CLLocationManager.LocationServicesEnabled) {
 				lman = new CLLocationManager {
@@ -26,7 +34,7 @@ namespace ARDemo
 
 				lman.LocationsUpdated += (sender, e) => {
 					var loc = e.Locations [0];
-					Timestamp = loc.Timestamp;
+					Timestamp = NSDateToDateTime(loc.Timestamp);
 					Location = new Location (loc.Coordinate.Latitude, loc.Coordinate.Longitude, loc.Altitude);
 //					Console.WriteLine (Location);
 					HorizontalAccuracy = loc.HorizontalAccuracy;

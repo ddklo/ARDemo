@@ -1,6 +1,6 @@
-﻿using System;
-using MonoTouch.Foundation;
-using MonoTouch.CoreMotion;
+using System;
+using Foundation;
+using CoreMotion;
 using OpenTK;
 
 namespace ARDemo

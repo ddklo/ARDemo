@@ -1,10 +1,10 @@
-﻿using System;
-using System.Drawing;
-using MonoTouch.UIKit;
+using System;
+using CoreGraphics;
+using UIKit;
 using OpenTK;
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.CoreGraphics;
+using CoreGraphics;
 
 namespace ARDemo
 {
@@ -16,7 +16,7 @@ namespace ARDemo
 		{
 			BackgroundColor = UIColor.White;
 			TextAlignment = UITextAlignment.Center;
-			Frame = new RectangleF (0, 0, 140, 22);
+			Frame = new CGRect (0, 0, 140, 22);
 		}
 	}
 
@@ -47,7 +47,7 @@ namespace ARDemo
 			View.AddSubviews (annos.Cast<UIView> ().ToArray ());
 		}
 
-		protected override void HandleFrame (MonoTouch.UIKit.UIImage f)
+		protected override void HandleFrame (UIKit.UIImage f)
 		{
 			base.HandleFrame (f);
 			LayoutAnnotations ();
@@ -68,16 +68,16 @@ namespace ARDemo
 			var hh = h/2;
 
 			foreach (var a in annos) {
-				PointF p;
+				CGPoint p;
 				if (LocationToView (a.Location, out p)) {
 					a.Transform = CGAffineTransform.MakeIdentity ();
-					a.Frame = new RectangleF (p.X - hw, p.Y - hh, w, h);
-					a.Transform = CGAffineTransform.MakeRotation ((float)orientationSensor.Pitch);
+					a.Frame = new CGRect (p.X - hw, p.Y - hh, w, h);
+					a.Transform = CGAffineTransform.MakeRotation ((nfloat)(float)orientationSensor.Pitch);
 				}
 			}
 		}
 
-		public bool LocationToView (Location location, out PointF point)
+		public bool LocationToView (Location location, out CGPoint point)
 		{
 			// Move location to 3D earth
 			var pos3d = new Vector4d (location.Position, 1);
@@ -93,7 +93,7 @@ namespace ARDemo
 
 			// Ignore points behind us
 			if (pos2h.W < 0) {
-				point = PointF.Empty;
+				point = CGPoint.Empty;
 				return false;
 			}
 
@@ -101,7 +101,7 @@ namespace ARDemo
 
 			// Stretch into our view
 			var fr = videoCameraView.Frame;
-			point = new PointF (
+			point = new CGPoint (
 				fr.X + (float)((pos2.X + 1) * 0.5) * fr.Width,
 				fr.Y + (float)((-pos2.Y + 1) * 0.5) * fr.Height
 			);

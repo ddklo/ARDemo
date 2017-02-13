@@ -1,7 +1,7 @@
-﻿using System;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-using System.Drawing;
+using System;
+using UIKit;
+using CoreGraphics;
+using CoreGraphics;
 using OpenTK;
 using OpenTK.Graphics.ES11;
 
@@ -12,7 +12,7 @@ namespace ARDemo
 	{
 		VideoCamera videoCamera;
 		protected readonly UIImageView videoCameraView;
-		SizeF videoImageSize;
+		CGSize videoImageSize;
 
 		LocationSensor locationSensor;
 		protected readonly OrientationSensor orientationSensor;
@@ -25,7 +25,7 @@ namespace ARDemo
 			orientationSensor = new OrientationSensor ();
 
 			videoCameraView = new UIImageView {
-				Transform = CGAffineTransform.MakeRotation ((float)Math.PI/2),
+				Transform = CGAffineTransform.MakeRotation ((nfloat)(float)Math.PI/2),
 			};
 
 			videoCamera = new VideoCamera ();
@@ -55,8 +55,8 @@ namespace ARDemo
 			projectionMatrix = GetProjectionMatrix (videoCamera, f);
 			
 			videoCameraView.Image = f;
-			var rotSize = f.Size;
-			var newSize = new SizeF (rotSize.Height, rotSize.Width);
+			var rotSize = (CGSize)f.Size;
+			var newSize = new CGSize (rotSize.Height, rotSize.Width);
 			if (newSize != videoImageSize) {
 				videoImageSize = newSize;
 				LayoutViews ();
@@ -94,7 +94,7 @@ namespace ARDemo
 			return new Vector4 ((float)v.X, (float)v.Y, (float)v.Z, (float)v.W);
 		}
 
-		protected SizeF viewSize = new SizeF (0, 0);
+		protected CGSize viewSize = new CGSize (0, 0);
 		protected Matrix4d projectionMatrix = Matrix4d.Identity;
 		protected Matrix4d modelViewMatrix = Matrix4d.Identity;
 
@@ -184,15 +184,15 @@ namespace ARDemo
 		{
 			Console.WriteLine ("Layout views");
 
-			var bounds = View.Bounds;
+			var bounds = (CGRect)View.Bounds;
 			var scale = bounds.Width / videoImageSize.Width;
 			if (scale * videoImageSize.Height < bounds.Height) {
 				scale = bounds.Height / videoImageSize.Height;
 			}
 
-			var size = new SizeF (videoImageSize.Width * scale, videoImageSize.Height * scale);
+			var size = new CGSize (videoImageSize.Width * scale, videoImageSize.Height * scale);
 
-			videoCameraView.Frame = new RectangleF (
+			videoCameraView.Frame = new CGRect (
 				(bounds.Width - size.Width) / 2,
 				(bounds.Height - size.Height) / 2,
 				size.Width,

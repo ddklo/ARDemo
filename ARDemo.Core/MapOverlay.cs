@@ -1,8 +1,8 @@
-﻿using System;
-using MonoTouch.UIKit;
-using MonoTouch.MapKit;
-using System.Drawing;
-using MonoTouch.CoreLocation;
+using System;
+using UIKit;
+using MapKit;
+using CoreGraphics;
+using CoreLocation;
 
 namespace ARDemo
 {
@@ -10,7 +10,7 @@ namespace ARDemo
 	{
 		readonly MKMapView map;
 
-		public MapOverlay () : base (new RectangleF (0, 0, 144, 144))
+		public MapOverlay () : base (new CGRect (0, 0, 144, 144))
 		{
 			map = new MKMapView (Bounds) {
 				AutoresizingMask = UIViewAutoresizing.FlexibleDimensions,

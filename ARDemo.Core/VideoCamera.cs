@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreMedia;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using AVFoundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreMedia;
+using CoreVideo;
+using Foundation;
+using UIKit;
 
 namespace ARDemo
 {
@@ -88,11 +88,13 @@ namespace ARDemo
 		void CreateOutput ()
 		{
 			output = new AVCaptureVideoDataOutput ();
-			output.VideoSettings = new AVVideoSettings (CVPixelFormatType.CV32BGRA);
+            var settings = new AVVideoSettingsUncompressed();
+        //    settings.PixelFormatType= 
+            output.UncompressedVideoSetting = settings;
+            //output.VideoSettings = new AVVideoSettings (CVPixelFormatType.CV32BGRA);
 
 			queue = new DispatchQueue ("VideoCameraQueue");
-			output.SetSampleBufferDelegateAndQueue (new VideoCameraDelegate { Camera = this }, queue);
-
+			output.SetSampleBufferDelegateQueue (new VideoCameraDelegate { Camera = this }, queue);
 			session.AddOutput (output);
 		}
 
@@ -123,9 +125,9 @@ namespace ARDemo
 				using (var pixelBuffer = sampleBuffer.GetImageBuffer () as CVPixelBuffer){
 					pixelBuffer.Lock (CVOptionFlags.None);
 					var baseAddress = pixelBuffer.BaseAddress;
-					int bytesPerRow = pixelBuffer.BytesPerRow;
-					int width = pixelBuffer.Width;
-					int height = pixelBuffer.Height;
+					int bytesPerRow = (int)pixelBuffer.BytesPerRow;
+					int width = (int)pixelBuffer.Width;
+					int height = (int)pixelBuffer.Height;
 					var flags = CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Little;
 					using (var cs = CGColorSpace.CreateDeviceRGB ())
 					using (var context = new CGBitmapContext (baseAddress,width, height, 8, bytesPerRow, cs, (CGImageAlphaInfo) flags))
