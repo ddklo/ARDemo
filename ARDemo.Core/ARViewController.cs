@@ -55,12 +55,11 @@ namespace ARDemo
 			projectionMatrix = GetProjectionMatrix (videoCamera, f);
 			
 			videoCameraView.Image = f;
-			var rotSize = (CGSize)f.Size;
+			var rotSize = f.Size;
 			var newSize = new CGSize (rotSize.Height, rotSize.Width);
-			if (newSize != videoImageSize) {
-				videoImageSize = newSize;
-				LayoutViews ();
-			}
+		    if (newSize == videoImageSize) return;
+		    videoImageSize = newSize;
+		    LayoutViews ();
 		}
 
 		protected virtual void HandleMotion (object sender, EventArgs e)
